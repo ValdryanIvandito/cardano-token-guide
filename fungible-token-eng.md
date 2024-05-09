@@ -54,14 +54,6 @@ cardano-cli query utxo \
 --$network
 ```
 
-**Example Result:**
-
-```bash
-                           TxHash                                 TxIx        Amount
---------------------------------------------------------------------------------------
-a0d2972de62348694d0677a7d6137cde6653d33d9c45cc3a3deb7f9749e34af4     0        10000000000 lovelace + TxOutDatumNone
-```
-
 ### Initiate TxHash and TxIx
 
 ```bash
@@ -70,7 +62,7 @@ utxo="COPY THE TX-HASH HERE#COPY THE TX-IX NUMBER HERE"
 
 **_Note: TxHash and TxIx are restricted between '#'_**
 
-## Step-4 Generate Policy ID
+## Step-4 Create Token Policy
 
 ### Create Directory for Policy Script
 
@@ -95,37 +87,49 @@ cardano-cli transaction policyid \
 --script-file ft/policy.script > ft/policyID
 ```
 
-## Step-5 Initiate Token
+### Initiate Token
 
 ```bash
-policyid=$(cat ft/policyID)
+policyId=$(cat ft/policyID)
 ticker="TOKEN"
 hexTicker=$(echo -n $ticker | xxd -ps | tr -d '\n')
-supply=1000000
+supply=1000000000
+decimals=6
+version="1.0"
 ```
 
-## Step-6 Load Token Image to IPFS
+## Step-5 Load Token Image to IPFS
 
 **Intructions:**
 
 1. Prepare the image
 2. Go to [Pinata Cloud](https://app.pinata.cloud/signin)
 3. Load the image
-4. Get CID, for example:
+4. Get CID, for example: _QmRiAgCf9J3NaF5u2BG4jqZF981m5hTdA6jq4swHdgoVcA_
+5. Copy-paste CID to icon parameter:
 
 ```bash
-QmRiAgCf9J3NaF5u2BG4jqZF981m5hTdA6jq4swHdgoVcA
+icon="ipfs://Copy CID here"
 ```
 
-5. Check to:
+## Step-6 Create Metadata JSON
 
 ```bash
-https://ipfs.io/ipfs/QmRiAgCf9J3NaF5u2BG4jqZF981m5hTdA6jq4swHdgoVcA
+echo "{" >> ft/metadata.json
+echo "  \"20\": {" >> ft/metadata.json
+echo "    \"$(echo $policyId)\": {" >> ft/metadata.json
+echo "      \"$(echo $hexTicker)\": {" >> ft/metadata.json
+echo "        \"ticker\": \"$(echo $ticker)\"," >> ft/metadata.json
+echo "        \"icon\": \"$(echo $icon)\"," >> ft/metadata.json
+echo "        \"decimals\": \"$(echo $decimals)\"," >> ft/metadata.json
+echo "        \"version\": \"$(echo $version)\"," >> ft/metadata.json
+echo "      }" >> ft/metadata.json
+echo "    }" >> ft/metadata.json
+echo "  }" >> ft/metadata.json
+echo "}" >> ft/metadata.json
 ```
 
-**_Hint: Wait for the process, sometimes it takes a long time._**
-
-## Step-7 Generate Protocol JSON
+## Step-7 Create Protocol JSON
 
 ```bash
 cardano-cli query protocol-parameters \
@@ -140,8 +144,8 @@ cardano-cli transaction build \
 --babbage-era \
 --$network \
 --tx-in $utxo \
---tx-out $tokenAddress+"1500000 + $supply $policyid.$hexTicker" \
---mint "$supply $policyid.$hexTicker" \
+--tx-out $tokenAddress+"1500000 + $supply $policyId.$hexTicker" \
+--mint "$supply $policyId.$hexTicker" \
 --mint-script-file ft/policy.script \
 --change-address $tokenAddress \
 --protocol-params-file ft/protocol.json \
@@ -169,4 +173,8 @@ cardano-cli transaction submit \
 
 # Demo
 
+The following is a video recorded by the Indonesian Cardano Developers Community where I demonstrated the steps above. Watch the recorded video at timestamp **_1:27:27_**, here is the [link](https://youtu.be/03hXLZ_07N0?list=PLUj8499OocHiL8gXPv8wMlLW-zIcyYdrQ).
+
 # References
+
+[CIP-35 On-Chain Token Metadata Standard](https://github.com/cardano-foundation/CIPs/blob/1d9fbd0e29f07b931bf1524c7aed6635d478cd75/CIP-0035/CIP-0035.md)
