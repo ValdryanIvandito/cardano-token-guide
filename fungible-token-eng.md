@@ -64,19 +64,8 @@ a0d2972de62348694d0677a7d6137cde6653d33d9c45cc3a3deb7f9749e34af4     0        10
 
 ### Initiate TxHash and TxIx
 
-**_Note: Each transaction can have one or multiple inputs, and one or multiple outputs_**
-
-**Single Input:**
-
 ```bash
 utxo="COPY THE TX-HASH HERE#COPY THE TX-IX NUMBER HERE"
-```
-
-**Multiple Input:**
-
-```bash
-utxo1="COPY THE TX-HASH1 HERE#COPY THE TX-IX1 NUMBER HERE"
-utxo2="COPY THE TX-HASH2 HERE#COPY THE TX-IX2 NUMBER HERE"
 ```
 
 **_Note: TxHash and TxIx are restricted between '#'_**
@@ -106,7 +95,7 @@ cardano-cli transaction policyid \
 --script-file ft/policy.script > ft/policyID
 ```
 
-## Create Protocol JSON
+## Step-5 Generate Protocol JSON
 
 ```bash
 cardano-cli query protocol-parameters \
@@ -114,7 +103,7 @@ cardano-cli query protocol-parameters \
 --out-file ft/protocol.json
 ```
 
-## Step-5 Initiate Token
+## Step-6 Initiate Token
 
 ```bash
 policyid=$(cat ft/policyID)
@@ -123,7 +112,7 @@ hexTicker=$(echo -n $ticker | xxd -ps | tr -d '\n')
 supply=1000000
 ```
 
-## Step-6 Build Transaction
+## Step-7 Build Transaction
 
 ```bash
 cardano-cli transaction build \
@@ -138,7 +127,7 @@ cardano-cli transaction build \
 --out-file ft/matx.draft
 ```
 
-## Step-7 Sign Transaction
+## Step-8 Sign Transaction
 
 ```bash
 cardano-cli transaction sign \
@@ -148,7 +137,7 @@ cardano-cli transaction sign \
 --out-file ft/matx.signed
 ```
 
-## Step-8 Submit Transaction
+## Step-9 Submit Transaction
 
 ```bash
 cardano-cli transaction submit \
