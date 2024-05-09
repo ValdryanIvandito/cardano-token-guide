@@ -95,7 +95,37 @@ cardano-cli transaction policyid \
 --script-file ft/policy.script > ft/policyID
 ```
 
-## Step-5 Generate Protocol JSON
+## Step-5 Initiate Token
+
+```bash
+policyid=$(cat ft/policyID)
+ticker="TOKEN"
+hexTicker=$(echo -n $ticker | xxd -ps | tr -d '\n')
+supply=1000000
+```
+
+## Step-6 Load Token Image to IPFS
+
+**Intructions:**
+
+1. Prepare the image
+2. Go to [Pinata Cloud](https://app.pinata.cloud/signin)
+3. Load the image
+4. Get CID, for example:
+
+```bash
+QmRiAgCf9J3NaF5u2BG4jqZF981m5hTdA6jq4swHdgoVcA
+```
+
+5. Check to:
+
+```bash
+https://ipfs.io/ipfs/QmRiAgCf9J3NaF5u2BG4jqZF981m5hTdA6jq4swHdgoVcA
+```
+
+**_Hint: Wait for the process, sometimes it takes a long time._**
+
+## Step-7 Generate Protocol JSON
 
 ```bash
 cardano-cli query protocol-parameters \
@@ -103,16 +133,7 @@ cardano-cli query protocol-parameters \
 --out-file ft/protocol.json
 ```
 
-## Step-6 Initiate Token
-
-```bash
-policyid=$(cat ft/policyID)
-ticker="TEST"
-hexTicker=$(echo -n $ticker | xxd -ps | tr -d '\n')
-supply=1000000
-```
-
-## Step-7 Build Transaction
+## Step-8 Build Transaction
 
 ```bash
 cardano-cli transaction build \
@@ -124,24 +145,25 @@ cardano-cli transaction build \
 --mint-script-file ft/policy.script \
 --change-address $tokenAddress \
 --protocol-params-file ft/protocol.json \
---out-file ft/matx.draft
+--metadata-json-file ft/metadata.json  \
+--out-file ft/minting.draft
 ```
 
-## Step-8 Sign Transaction
+## Step-9 Sign Transaction
 
 ```bash
 cardano-cli transaction sign \
 --signing-key-file payment.skey \
 --$network \
 --tx-body-file ft/matx.draft \
---out-file ft/matx.signed
+--out-file ft/minting.signed
 ```
 
-## Step-9 Submit Transaction
+## Step-10 Submit Transaction
 
 ```bash
 cardano-cli transaction submit \
---tx-file ft/matx.signed \
+--tx-file ft/minting.signed \
 --$network
 ```
 
