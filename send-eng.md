@@ -84,7 +84,7 @@ cardano-cli transaction build \
 --tx-in $utxo \
 --tx-out $recipientAddress+$adaAmount+"$tokenAmount $policyId.$hexTicker" \
 --change-address $tokenAddress \
---out-file ft/sendtoken.draft
+--out-file sendtoken.draft
 ```
 
 ## Step-7 Sign Transaction
@@ -93,15 +93,15 @@ cardano-cli transaction build \
 cardano-cli transaction sign \
 --signing-key-file payment.skey \
 --$network \
---tx-body-file ft/sendtoken.draft \
---out-file ft/sendtoken.signed
+--tx-body-file sendtoken.draft \
+--out-file sendtoken.signed
 ```
 
 ## Step-8 Submit Transaction
 
 ```bash
 cardano-cli transaction submit \
---tx-file ft/sendtoken.signed \
+--tx-file sendtoken.signed \
 --$network
 ```
 
