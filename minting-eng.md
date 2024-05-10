@@ -1,6 +1,6 @@
 # Introduction
 
-This documentation provides a simplified, step-by-step guide to minting and burning fungible token on Cardano, follow the steps below.
+This documentation provides a simplified, step-by-step guide to minting fungible token on Cardano, follow the steps below.
 
 # Step by Step
 
@@ -87,20 +87,20 @@ cardano-cli transaction policyid \
 --script-file ft/policy.script > ft/policyID
 ```
 
-### Initiate Token
+### Initiate Token Parameter
 
 ```bash
 policyId=$(cat ft/policyID)
 ticker="TOKEN"
 hexTicker=$(echo -n $ticker | xxd -ps | tr -d '\n')
-supply=1000000000
+mintSupply=1000000000
 decimals=6
 version="1.0"
 ```
 
 ## Step-5 Load Token Image to IPFS
 
-**Intructions:**
+**Instructions:**
 
 1. Prepare the image
 2. Go to [Pinata Cloud](https://app.pinata.cloud/signin)
@@ -145,12 +145,12 @@ cardano-cli transaction build \
 --$network \
 --tx-in $utxo \
 --tx-out $tokenAddress+"1500000 + $supply $policyId.$hexTicker" \
---mint "$supply $policyId.$hexTicker" \
+--mint "$mintSupply $policyId.$hexTicker" \
 --mint-script-file ft/policy.script \
 --change-address $tokenAddress \
 --protocol-params-file ft/protocol.json \
 --metadata-json-file ft/metadata.json  \
---out-file ft/minting.draft
+--out-file ft/mint.draft
 ```
 
 ## Step-9 Sign Transaction
@@ -159,15 +159,15 @@ cardano-cli transaction build \
 cardano-cli transaction sign \
 --signing-key-file payment.skey \
 --$network \
---tx-body-file ft/matx.draft \
---out-file ft/minting.signed
+--tx-body-file ft/mint.draft \
+--out-file ft/mint.signed
 ```
 
 ## Step-10 Submit Transaction
 
 ```bash
 cardano-cli transaction submit \
---tx-file ft/minting.signed \
+--tx-file ft/mint.signed \
 --$network
 ```
 
@@ -176,5 +176,7 @@ cardano-cli transaction submit \
 The following is a video recorded by the Indonesian Cardano Developers Community where I demonstrated the steps above. Watch the recorded video at timestamp **_1:27:27_**, here is the [link](https://youtu.be/03hXLZ_07N0?list=PLUj8499OocHiL8gXPv8wMlLW-zIcyYdrQ).
 
 # References
+
+[Cardano Developer Portal: Minting Native Assets](https://developers.cardano.org/docs/native-tokens/minting)
 
 [CIP-35 On-Chain Token Metadata Standard](https://github.com/cardano-foundation/CIPs/blob/1d9fbd0e29f07b931bf1524c7aed6635d478cd75/CIP-0035/CIP-0035.md)
