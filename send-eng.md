@@ -66,7 +66,7 @@ utxo="COPY THE TX-HASH HERE#COPY THE TX-IX NUMBER HERE"
 
 ```bash
 policyId=$(cat ft/policyID)
-ticker="TOKEN"
+ticker="MYTOKEN"
 hexTicker=$(echo -n $ticker | xxd -ps | tr -d '\n')
 recipientAddress="COPY THE RECIPIENT ADDRESS HERE"
 adaAmount="AMOUNT IN LOVELACE"
