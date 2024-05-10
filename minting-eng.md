@@ -92,7 +92,8 @@ cardano-cli transaction policyid \
 
 ```bash
 policyId=$(cat ft/policyID)
-ticker="MYTOKEN"
+tokenName="MYTOKEN"
+ticker="MTKN"
 hexTicker=$(echo -n $ticker | xxd -ps | tr -d '\n')
 mintSupply=1000000000
 decimals=6
@@ -110,7 +111,8 @@ version="1.0"
 5. Copy and paste the CID into the icon parameter:
 
 ```bash
-icon="ipfs://ipfs/Copy CID here"
+image="ipfs://Copy CID here"
+mediaType="image/jpg"
 ```
 
 ## Step-6 Create Metadata JSON
@@ -119,9 +121,10 @@ icon="ipfs://ipfs/Copy CID here"
 echo "{" >> ft/metadata.json
 echo "  \"20\": {" >> ft/metadata.json
 echo "    \"$(echo $policyId)\": {" >> ft/metadata.json
-echo "      \"$(echo $hexTicker)\": {" >> ft/metadata.json
-echo "        \"ticker\": \"$(echo $ticker)\"," >> ft/metadata.json
-echo "        \"icon\": \"$(echo $icon)\"," >> ft/metadata.json
+echo "      \"$(echo $ticker)\": {" >> ft/metadata.json
+echo "        \"name\": \"$(echo $name)\"," >> ft/metadata.json
+echo "        \"image\": \"$(echo $image)\"," >> ft/metadata.json
+echo "        \"mediaType\": \"$(echo $mediaType)\"," >> ft/metadata.json
 echo "        \"decimals\": \"$(echo $decimals)\"," >> ft/metadata.json
 echo "        \"version\": \"$(echo $version)\"" >> ft/metadata.json
 echo "      }" >> ft/metadata.json
