@@ -122,7 +122,7 @@ echo "      \"$(echo $hexTicker)\": {" >> ft/metadata.json
 echo "        \"ticker\": \"$(echo $ticker)\"," >> ft/metadata.json
 echo "        \"icon\": \"$(echo $icon)\"," >> ft/metadata.json
 echo "        \"decimals\": \"$(echo $decimals)\"," >> ft/metadata.json
-echo "        \"version\": \"$(echo $version)\"," >> ft/metadata.json
+echo "        \"version\": \"$(echo $version)\"" >> ft/metadata.json
 echo "      }" >> ft/metadata.json
 echo "    }" >> ft/metadata.json
 echo "  }" >> ft/metadata.json
