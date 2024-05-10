@@ -54,10 +54,11 @@ cardano-cli query utxo \
 --$network
 ```
 
-### Initiate TxHash and TxIx
+### Initiate TxHash, TxIx, and Balance
 
 ```bash
 utxo="COPY THE TX-HASH HERE#COPY THE TX-IX NUMBER HERE"
+balance="COPY THE BALANCE HERE"
 ```
 
 **_Note: TxHash and TxIx are restricted between '#'_**
@@ -102,11 +103,11 @@ version="1.0"
 
 **Instructions:**
 
-1. Prepare the image
-2. Go to [Pinata Cloud](https://app.pinata.cloud/signin)
-3. Load the image
+1. Prepare the image.
+2. Go to [Pinata Cloud](https://app.pinata.cloud/signin).
+3. Load the image.
 4. Get CID, for example: _QmRiAgCf9J3NaF5u2BG4jqZF981m5hTdA6jq4swHdgoVcA_
-5. Copy-paste CID to icon parameter:
+5. Copy and paste the CID into the icon parameter:
 
 ```bash
 icon="ipfs://Copy CID here"
@@ -144,7 +145,7 @@ cardano-cli transaction build \
 --babbage-era \
 --$network \
 --tx-in $utxo \
---tx-out $tokenAddress+"1500000 + $mintSupply $policyId.$hexTicker" \
+--tx-out $tokenAddress+$balance+"$mintSupply $policyId.$hexTicker" \
 --mint "$mintSupply $policyId.$hexTicker" \
 --mint-script-file ft/policy.script \
 --change-address $tokenAddress \
