@@ -91,7 +91,7 @@ cardano-cli transaction policyid \
 
 ```bash
 policyId=$(cat ft/policyID)
-ticker="TOKEN"
+ticker="MYTOKEN"
 hexTicker=$(echo -n $ticker | xxd -ps | tr -d '\n')
 mintSupply=1000000000
 decimals=6
@@ -144,7 +144,7 @@ cardano-cli transaction build \
 --babbage-era \
 --$network \
 --tx-in $utxo \
---tx-out $tokenAddress+"1500000 + $supply $policyId.$hexTicker" \
+--tx-out $tokenAddress+"1500000 + $mintSupply $policyId.$hexTicker" \
 --mint "$mintSupply $policyId.$hexTicker" \
 --mint-script-file ft/policy.script \
 --change-address $tokenAddress \
