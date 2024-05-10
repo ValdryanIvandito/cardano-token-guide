@@ -110,7 +110,7 @@ version="1.0"
 5. Copy and paste the CID into the icon parameter:
 
 ```bash
-icon="ipfs://Copy CID here"
+icon="ipfs://ipfs/Copy CID here"
 ```
 
 ## Step-6 Create Metadata JSON
@@ -138,38 +138,71 @@ cardano-cli query protocol-parameters \
 --out-file ft/protocol.json
 ```
 
-## Step-8 Build Transaction
+## Step-8 Manually Calculate Fee
 
 ```bash
-cardano-cli transaction build \
---babbage-era \
---$network \
+cardano-cli transaction build-raw \
+--fee 0 \
+--tx-in $utxo \
+--tx-out $tokenAddress+$balance+"$mintSupply $policyId.$hexTicker" \
+--mint "$mintSupply $policyId.$hexTicker" \
+--minting-script-file ft/policy.script \
+--metadata-json-file ft/metadata.json  \
+--out-file ft/mint.draft
+
+fee=$(cardano-cli transaction calculate-min-fee --tx-body-file ft/mint.draft --tx-in-count 1 --tx-out-count 1 --witness-count 1 --$network --protocol-params-file ft/protocol.json | cut -d " " -f1)
+echo $fee
+
+balance=$(expr $balance - $fee)
+echo $balance
+```
+
+## Step-9 Build Transaction
+
+```bash
+cardano-cli transaction build-raw \
+--fee $fee \
 --tx-in $utxo \
 --tx-out $tokenAddress+$balance+"$mintSupply $policyId.$hexTicker" \
 --mint "$mintSupply $policyId.$hexTicker" \
 --mint-script-file ft/policy.script \
---change-address $tokenAddress \
 --protocol-params-file ft/protocol.json \
 --metadata-json-file ft/metadata.json  \
---out-file ft/mint.draft
+--out-file ft/mint.raw
 ```
 
-## Step-9 Sign Transaction
+## Step-10 Sign Transaction
 
 ```bash
 cardano-cli transaction sign \
 --signing-key-file payment.skey \
 --$network \
---tx-body-file ft/mint.draft \
+--tx-body-file ft/mint.raw \
 --out-file ft/mint.signed
 ```
 
-## Step-10 Submit Transaction
+## Step-11 Submit Transaction
 
 ```bash
 cardano-cli transaction submit \
 --tx-file ft/mint.signed \
 --$network
+```
+
+## Step-12 Display The UTxO Information
+
+```bash
+cardano-cli query utxo \
+--address $tokenAddress \
+--$network
+```
+
+**Example Result:**
+
+```bash
+                           TxHash                                 TxIx        Amount
+--------------------------------------------------------------------------------------
+194593e5b7fac4b5d81adbb57407c96faeb7dbbcb222f882d2e21ced9e5a9ff1     0        9999813643 lovelace + 1000000000 e5444aaa4f3b82411dd1017a8d28324485550c14a35aa02a480586d6.4d59544f4b454e + TxOutDatumNone
 ```
 
 # Demo

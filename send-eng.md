@@ -58,6 +58,8 @@ cardano-cli query utxo \
 
 ```bash
 utxo="COPY THE TX-HASH HERE#COPY THE TX-IX NUMBER HERE"
+adaBalance="COPY THE ADA BALANCE HERE"
+tokenBalance="COPY THE TOKEN BALANCE HERE"
 ```
 
 **_Note: TxHash and TxIx are restricted between '#'_**
@@ -69,22 +71,40 @@ policyId=$(cat ft/policyID)
 ticker="MYTOKEN"
 hexTicker=$(echo -n $ticker | xxd -ps | tr -d '\n')
 recipientAddress="COPY THE RECIPIENT ADDRESS HERE"
-adaAmount="AMOUNT IN LOVELACE"
-tokenAmount="TOKEN AMOUNT TO BE SENT"
+adaSendAmount="AMOUNT IN LOVELACE TO BE SENT"
+tokenSendAmount="TOKEN AMOUNT TO BE SENT"
+adaAmount=$(expr $adaBalance - $adaSendAmount)
+tokenAmount=$(expr $tokenBalance - $tokenSendAmount)
 ```
 
 **_Note: The minimum amount of ADA is 1500000 lovelace that must be sent when sending tokens_**
 
+## Step-5 Manually Calculate Fee
+
+```bash
+cardano-cli transaction build-raw \
+--fee 0 \
+--tx-in $utxo \
+--tx-out $recipientAddress+$adaSendAmount+"$tokenSendAmount $policyId.$hexTicker" \
+--tx-out $tokenAddress+$adaAmount+"$tokenAmount $policyId.$hexTicker" \
+--out-file ft/send.draft
+
+fee=$(cardano-cli transaction calculate-min-fee --tx-body-file ft/send.draft --tx-in-count 1 --tx-out-count 2 --witness-count 1 --$network --protocol-params-file ft/protocol.json | cut -d " " -f1)
+echo $fee
+
+adaAmount=$(expr $adaAmount - $fee)
+echo $adaAmount
+```
+
 ## Step-5 Build Transaction
 
 ```bash
-cardano-cli transaction build \
---babbage-era \
---$network \
+cardano-cli transaction build-raw \
+--fee $fee \
 --tx-in $utxo \
---tx-out $recipientAddress+$adaAmount+"$tokenAmount $policyId.$hexTicker" \
---change-address $tokenAddress \
---out-file sendtoken.draft
+--tx-out $recipientAddress+$adaSendAmount+"$tokenSendAmount $policyId.$hexTicker" \
+--tx-out $tokenAddress+$adaAmount+"$tokenAmount $policyId.$hexTicker" \
+--out-file ft/send.raw
 ```
 
 ## Step-7 Sign Transaction
@@ -93,15 +113,15 @@ cardano-cli transaction build \
 cardano-cli transaction sign \
 --signing-key-file payment.skey \
 --$network \
---tx-body-file sendtoken.draft \
---out-file sendtoken.signed
+--tx-body-file ft/send.raw \
+--out-file ft/send.signed
 ```
 
 ## Step-8 Submit Transaction
 
 ```bash
 cardano-cli transaction submit \
---tx-file sendtoken.signed \
+--tx-file ft/send.signed \
 --$network
 ```
 
