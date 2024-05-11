@@ -68,8 +68,8 @@ tokenBalance="COPY THE TOKEN BALANCE HERE"
 
 ```bash
 policyId=$(cat ft/policyID)
-ticker="MTKN"
-hexTicker=$(echo -n $ticker | xxd -ps | tr -d '\n')
+name="MYTOKEN"
+hexName=$(echo -n $name | xxd -ps | tr -d '\n')
 recipientAddress="COPY THE RECIPIENT ADDRESS HERE"
 adaSendAmount="AMOUNT IN LOVELACE TO BE SENT"
 tokenSendAmount="TOKEN AMOUNT TO BE SENT"
@@ -85,8 +85,8 @@ tokenAmount=$(expr $tokenBalance - $tokenSendAmount)
 cardano-cli transaction build-raw \
 --fee 0 \
 --tx-in $utxo \
---tx-out $recipientAddress+$adaSendAmount+"$tokenSendAmount $policyId.$hexTicker" \
---tx-out $tokenAddress+$adaAmount+"$tokenAmount $policyId.$hexTicker" \
+--tx-out $recipientAddress+$adaSendAmount+"$tokenSendAmount $policyId.$hexName" \
+--tx-out $tokenAddress+$adaAmount+"$tokenAmount $policyId.$hexName" \
 --out-file ft/send.draft
 
 fee=$(cardano-cli transaction calculate-min-fee --tx-body-file ft/send.draft --tx-in-count 1 --tx-out-count 2 --witness-count 1 --$network --protocol-params-file ft/protocol.json | cut -d " " -f1)
@@ -102,8 +102,8 @@ echo $adaAmount
 cardano-cli transaction build-raw \
 --fee $fee \
 --tx-in $utxo \
---tx-out $recipientAddress+$adaSendAmount+"$tokenSendAmount $policyId.$hexTicker" \
---tx-out $tokenAddress+$adaAmount+"$tokenAmount $policyId.$hexTicker" \
+--tx-out $recipientAddress+$adaSendAmount+"$tokenSendAmount $policyId.$hexName" \
+--tx-out $tokenAddress+$adaAmount+"$tokenAmount $policyId.$hexName" \
 --out-file ft/send.raw
 ```
 

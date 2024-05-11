@@ -92,9 +92,9 @@ cardano-cli transaction policyid \
 
 ```bash
 policyId=$(cat ft/policyID)
-tokenName="MYTOKEN"
+name="MYTOKEN"
+hexName=$(echo -n $name | xxd -ps | tr -d '\n')
 ticker="MTKN"
-hexTicker=$(echo -n $ticker | xxd -ps | tr -d '\n')
 desc="This is experimental token"
 mintSupply=1000000000
 decimals=6
@@ -112,7 +112,7 @@ version="1.0"
 5. Copy and paste the CID into the icon parameter:
 
 ```bash
-image="ipfs://Copy CID here"
+ipfs="ipfs://Copy CID here"
 mediaType="image/png"
 ```
 
@@ -122,16 +122,40 @@ mediaType="image/png"
 echo "{" >> ft/metadata.json
 echo "  \"20\": {" >> ft/metadata.json
 echo "    \"$(echo $policyId)\": {" >> ft/metadata.json
-echo "      \"$(echo $hexTicker)\": {" >> ft/metadata.json
-echo "        \"name\": \"$(echo $name)\"," >> ft/metadata.json
+echo "      \"$(echo $hexName)\": {" >> ft/metadata.json
 echo "        \"ticker\": \"$(echo $ticker)\"," >> ft/metadata.json
+echo "        \"name\": \"$(echo $name)\"," >> ft/metadata.json
 echo "        \"desc\": \"$(echo $desc)\"," >> ft/metadata.json
-echo "        \"image\": \"$(echo $image)\"," >> ft/metadata.json
+echo "        \"description\": \"$(echo $desc)\"," >> ft/metadata.json
+echo "        \"icon\": \"$(echo $ipfs)\"," >> ft/metadata.json
+echo "        \"image\": \"$(echo $ipfs)\"," >> ft/metadata.json
 echo "        \"mediaType\": \"$(echo $mediaType)\"," >> ft/metadata.json
 echo "        \"decimals\": \"$(echo $decimals)\"," >> ft/metadata.json
-echo "        \"version\": \"$(echo $version)\"" >> ft/metadata.json
+echo "        \"files\": [{" >> ft/metadata.json
+echo "          \"name\": \"$(echo $name)\"," >> ft/metadata.json
+echo "          \"mediaType\": \"$(echo $mediaType)\"," >> ft/metadata.json
+echo "          \"src\": \"$(echo $ipfs)\"" >> ft/metadata.json
+echo "        }]" >> ft/metadata.json
 echo "      }" >> ft/metadata.json
-echo "    }" >> ft/metadata.json
+echo "    }," >> ft/metadata.json
+echo "    \"version\": \"$(echo $version)\"" >> ft/metadata.json
+echo "  }," >> ft/metadata.json
+echo "  \"721\": {" >> ft/metadata.json
+echo "    \"$(echo $policyId)\": {" >> ft/metadata.json
+echo "      \"$(echo $name)\": {" >> ft/metadata.json
+echo "        \"name\": \"$(echo $name)\"," >> ft/metadata.json
+echo "        \"ticker\": \"$(echo $ticker)\"," >> ft/metadata.json
+echo "        \"image\": \"$(echo $ipfs)\"," >> ft/metadata.json
+echo "        \"mediaType\": \"$(echo $mediaType)\"," >> ft/metadata.json
+echo "        \"description\": \"$(echo $desc)\"," >> ft/metadata.json
+echo "        \"files\": [{" >> ft/metadata.json
+echo "          \"name\": \"$(echo $name)\"," >> ft/metadata.json
+echo "          \"mediaType\": \"$(echo $mediaType)\"," >> ft/metadata.json
+echo "          \"src\": \"$(echo $ipfs)\"" >> ft/metadata.json
+echo "        }]" >> ft/metadata.json
+echo "      }" >> ft/metadata.json
+echo "    }," >> ft/metadata.json
+echo "    \"version\": \"$(echo $version)\"" >> ft/metadata.json
 echo "  }" >> ft/metadata.json
 echo "}" >> ft/metadata.json
 ```
@@ -150,8 +174,8 @@ cardano-cli query protocol-parameters \
 cardano-cli transaction build-raw \
 --fee 0 \
 --tx-in $utxo \
---tx-out $tokenAddress+$balance+"$mintSupply $policyId.$hexTicker" \
---mint "$mintSupply $policyId.$hexTicker" \
+--tx-out $tokenAddress+$balance+"$mintSupply $policyId.$hexName" \
+--mint "$mintSupply $policyId.$hexName" \
 --minting-script-file ft/policy.script \
 --metadata-json-file ft/metadata.json  \
 --out-file ft/mint.draft
@@ -169,8 +193,8 @@ echo $balance
 cardano-cli transaction build-raw \
 --fee $fee \
 --tx-in $utxo \
---tx-out $tokenAddress+$balance+"$mintSupply $policyId.$hexTicker" \
---mint "$mintSupply $policyId.$hexTicker" \
+--tx-out $tokenAddress+$balance+"$mintSupply $policyId.$hexName" \
+--mint "$mintSupply $policyId.$hexName" \
 --mint-script-file ft/policy.script \
 --protocol-params-file ft/protocol.json \
 --metadata-json-file ft/metadata.json  \
