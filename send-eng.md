@@ -68,7 +68,7 @@ tokenBalance="COPY THE TOKEN BALANCE HERE"
 
 ```bash
 policyId=$(cat ft/policyID)
-ticker="MYTOKEN"
+ticker="MTKN"
 hexTicker=$(echo -n $ticker | xxd -ps | tr -d '\n')
 recipientAddress="COPY THE RECIPIENT ADDRESS HERE"
 adaSendAmount="AMOUNT IN LOVELACE TO BE SENT"

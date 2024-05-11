@@ -95,6 +95,7 @@ policyId=$(cat ft/policyID)
 tokenName="MYTOKEN"
 ticker="MTKN"
 hexTicker=$(echo -n $ticker | xxd -ps | tr -d '\n')
+desc="This is experimental token"
 mintSupply=1000000000
 decimals=6
 version="1.0"
@@ -112,7 +113,7 @@ version="1.0"
 
 ```bash
 image="ipfs://Copy CID here"
-mediaType="image/jpg"
+mediaType="image/png"
 ```
 
 ## Step-6 Create Metadata JSON
@@ -121,8 +122,10 @@ mediaType="image/jpg"
 echo "{" >> ft/metadata.json
 echo "  \"20\": {" >> ft/metadata.json
 echo "    \"$(echo $policyId)\": {" >> ft/metadata.json
-echo "      \"$(echo $ticker)\": {" >> ft/metadata.json
+echo "      \"$(echo $hexTicker)\": {" >> ft/metadata.json
 echo "        \"name\": \"$(echo $name)\"," >> ft/metadata.json
+echo "        \"ticker\": \"$(echo $ticker)\"," >> ft/metadata.json
+echo "        \"desc\": \"$(echo $desc)\"," >> ft/metadata.json
 echo "        \"image\": \"$(echo $image)\"," >> ft/metadata.json
 echo "        \"mediaType\": \"$(echo $mediaType)\"," >> ft/metadata.json
 echo "        \"decimals\": \"$(echo $decimals)\"," >> ft/metadata.json
