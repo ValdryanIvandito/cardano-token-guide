@@ -112,7 +112,7 @@ version="1.0"
 5. Copy and paste the CID into the icon parameter:
 
 ```bash
-ipfs="ipfs://ipfs/Copy CID here"
+ipfs="ipfs://Copy CID here"
 mediaType="image/png"
 ```
 
