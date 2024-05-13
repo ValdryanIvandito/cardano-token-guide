@@ -148,6 +148,7 @@ echo "        \"ticker\": \"$(echo $ticker)\"," >> ft/metadata.json
 echo "        \"image\": \"$(echo $ipfs)\"," >> ft/metadata.json
 echo "        \"mediaType\": \"$(echo $mediaType)\"," >> ft/metadata.json
 echo "        \"description\": \"$(echo $desc)\"," >> ft/metadata.json
+echo "        \"decimals\": \"$(echo $decimals)\"," >> ft/metadata.json
 echo "        \"files\": [{" >> ft/metadata.json
 echo "          \"name\": \"$(echo $name)\"," >> ft/metadata.json
 echo "          \"mediaType\": \"$(echo $mediaType)\"," >> ft/metadata.json
