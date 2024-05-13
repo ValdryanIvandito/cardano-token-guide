@@ -112,7 +112,7 @@ version="1.0"
 5. Copy and paste the CID into the icon parameter:
 
 ```bash
-ipfs="ipfs://Copy CID here"
+ipfs="ipfs://ipfs/Copy CID here"
 mediaType="image/png"
 ```
 
@@ -167,33 +167,9 @@ echo "  \"20\": {" >> ft/metadata.json
 echo "    \"$(echo $policyId)\": {" >> ft/metadata.json
 echo "      \"$(echo $hexName)\": {" >> ft/metadata.json
 echo "        \"ticker\": \"$(echo $ticker)\"," >> ft/metadata.json
-echo "        \"name\": \"$(echo $name)\"," >> ft/metadata.json
-echo "        \"desc\": \"$(echo $desc)\"," >> ft/metadata.json
-echo "        \"description\": \"$(echo $desc)\"," >> ft/metadata.json
-echo "        \"icon\": \"$(echo $ipfs)\"," >> ft/metadata.json
-echo "        \"image\": \"$(echo $ipfs)\"," >> ft/metadata.json
-echo "        \"mediaType\": \"$(echo $mediaType)\"," >> ft/metadata.json
-echo "        \"decimals\": \"$(echo $decimals)\"," >> ft/metadata.json
-echo "        \"files\": [{" >> ft/metadata.json
-echo "          \"name\": \"$(echo $name)\"," >> ft/metadata.json
-echo "          \"mediaType\": \"$(echo $mediaType)\"," >> ft/metadata.json
-echo "          \"src\": \"$(echo $ipfs)\"" >> ft/metadata.json
-echo "        }]" >> ft/metadata.json
-echo "      }" >> ft/metadata.json
-echo "    }," >> ft/metadata.json
-echo "    \"version\": \"$(echo $version)\"" >> ft/metadata.json
-echo "  }" >> ft/metadata.json
-echo "}" >> ft/metadata.json
-```
-
-```bash
-echo "{" >> ft/metadata.json
-echo "  \"20\": {" >> ft/metadata.json
-echo "    \"$(echo $policyId)\": {" >> ft/metadata.json
-echo "      \"$(echo $hexName)\": {" >> ft/metadata.json
-echo "        \"ticker\": \"$(echo $ticker)\"," >> ft/metadata.json
 echo "        \"desc\": \"$(echo $desc)\"," >> ft/metadata.json
 echo "        \"icon\": \"$(echo $ipfs)\"," >> ft/metadata.json
+echo "        \"icon-16\": \"$(echo $ipfs)\"," >> ft/metadata.json
 echo "        \"decimals\": \"$(echo $decimals)\"," >> ft/metadata.json
 echo "        \"version\": \"$(echo $version)\"" >> ft/metadata.json
 echo "      }" >> ft/metadata.json
@@ -212,8 +188,8 @@ echo "        \"name\": \"$(echo $name)\"," >> ft/metadata.json
 echo "        \"desc\": \"$(echo $desc)\"," >> ft/metadata.json
 echo "        \"description\": \"$(echo $desc)\"," >> ft/metadata.json
 echo "        \"icon\": \"$(echo $ipfs)\"," >> ft/metadata.json
-echo "        \"image\": \"$(echo $ipfs)\"," >> ft/metadata.json
-echo "        \"mediaType\": \"$(echo $mediaType)\"," >> ft/metadata.json
+echo "        \"logo\": \"$(echo $ipfs)\"," >> ft/metadata.json
+echo "        \"decimals\": \"$(echo $decimals)\"," >> ft/metadata.json
 echo "        \"version\": \"$(echo $version)\"" >> ft/metadata.json
 echo "      }" >> ft/metadata.json
 echo "    }" >> ft/metadata.json
