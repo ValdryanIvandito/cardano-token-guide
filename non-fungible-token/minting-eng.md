@@ -73,14 +73,16 @@ balance="COPY THE BALANCE HERE"
 
 ## Step-4 Generate Token Policy
 
-**_Hint:_**
+**_Notes:_**
 **_Since NFTs are likely to be traded or sold, they should follow a more strict policy. Most of the time, a value is defined by the (artificial) scarcity of an asset._**
 
 **_You can regulate such factors with [multi-signature scripts](https://github.com/IntersectMBO/cardano-node/blob/c6b574229f76627a058a7e559599d2fc3f40575d/doc/reference/simple-scripts.md)._**
 
 **_For this guide, we will choose the following constraints:_**
-**_1. There should be only one defined signature allowed to mint (or burn) the NFT._**
-**_2. The signature will expire in 10000 slots from now._**
+
+**_1. There should be only one defined signature (Policy Verification & Signing Key) allowed to mint (or burn) the NFT._**
+
+**_2. The signature will expire in 10000 slots from now (Expiration Time)._**
 
 ### Create Directories
 
@@ -141,7 +143,6 @@ policyId=$(cat nft/policy/policyID)
 nftName="MY-NFT"
 nftNameHex=$(echo -n $nftName | xxd -b -ps -c 80 | tr -d '\n')
 nftAmount="1"
-adaAmount="1400000"
 description="This is a trial NFT, it used for educational purposes."
 version="1.0"
 ```
@@ -191,14 +192,14 @@ cardano-cli transaction build \
 --$network \
 --babbage-era \
 --tx-in $utxo \
---tx-out $tokenAddress+$adaAmount+"$nftAmount $policyId.$nftNameHex" \
+--tx-out $tokenAddress+$balance+"$nftAmount $policyId.$nftNameHex" \
 --change-address $tokenAddress \
 --mint="$nftAmount $policyId.$nftNameHex" \
 --minting-script-file nft/policy/policy.script \
 --metadata-json-file nft/metadata.json  \
 --invalid-hereafter $slotNumber \
 --witness-override 2 \
---out-file nft/mint.raw 
+--out-file nft/mint.raw
 ```
 
 ## Step-7 Sign Transaction
